@@ -9,6 +9,9 @@ Contribute to the cause!
 
 I am an underemployed computer programmer.  Who loves programming computers.
 If you feel you benefit from this code repo and knowledge transfer consider a donation.
+
+Button donation will read "Breaking Blackjack" ( another endeavour )
+
 Thanks in advance.
 
 
