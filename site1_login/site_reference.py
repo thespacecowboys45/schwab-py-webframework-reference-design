@@ -10,7 +10,7 @@ from schwab import auth
 from routes import register_routes
 
 # Load environment variables from a custom file
-load_dotenv('sitevars.prod.env')
+load_dotenv('sitevars.env')
 
 # create the Flask app
 app = Flask(__name__, template_folder="templates")
@@ -91,9 +91,9 @@ def home():
 
         print(f"Scraped oauth_code {g.oauth_code}")
 
-        # NOTE: This should be refactored because it is pointless to actually create an instantiation of the
-        #       schwab-py client.  The process of calling this function finalizes the creation of the token
-        #       file on the server so that it can be used in subsequent future calls to schwab's API
+        # NOTE: The process of calling this function finalizes the creation of the token
+        #       file on the server (or localhost) so that 
+        #       it can be used in subsequent future calls to schwab's API
         #
         client = createClientFromCallback(received_url)  # Call the function to get the bearer token    
         if client is None:

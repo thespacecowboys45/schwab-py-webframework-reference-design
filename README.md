@@ -1,22 +1,22 @@
 # schwab-py-webframework-reference-design
-Intended reference design for apractical example of using [schwab-py](https://github.com/alexgolec/schwab-py/tree/main) in a working web application (web framework).  As a note: This codebase not officially associated with 'schwab-py'.  I am an API developer and integrations specialist.  We claim no responsibility for keeping up-to-date with changes in 'schwab-py' in this reference design.  However, the intent is to demonstrate in simple terms how to "create a working web application" using the 'schwab-py' API abstraction library which is built in Python.
+Intended reference design for a practical example of using [schwab-py](https://github.com/alexgolec/schwab-py/tree/main) in a working web application (web framework).  
+
+***As a note:*** This codebase not officially associated with 'schwab-py'.  
+
+***Disclaimer:*** We claim no responsibility for keeping up-to-date with changes in 'schwab-py' in this reference design.  However, the intent is to demonstrate in simple terms how to "create a working web application" using the 'schwab-py' API abstraction library which is built in Python.
 
 ## Donate
 
-Contribute to the cause!
-
 [![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4XJC3BTYJ8ALG)
 
-If you feel you benefit from this code repo and knowledge transfer consider a donation.
+If you feel you benefit from this code repo consider a donation.
 
-Button donation will read "Breaking Blackjack" ( a future endeavour )
-
-Thanks in advance.
+Button donation will read "Breaking Blackjack" ( a future endeavour ).  Thanks in advance.
 
 ## Requirements
 
 - Python3
-- schwab-py
+- [schwab-py](https://github.com/alexgolec/schwab-py/tree/main)
 - Flask
 
 ## Optional Requirements
@@ -28,7 +28,7 @@ These optional components allow this application to run as a production website.
 
 # Setting up your APP in Schwab
 
-This is beyond the scope of our implementation.  Better to reference 'schwab-py' and their documents on how to create an APP in Schwab.  **[CLICK HERE](https://schwab-py.readthedocs.io/en/latest/getting-started.html)** for more information on getting started.
+This is beyond the scope of this implementation.  Better to reference 'schwab-py' and their documents on how to create an APP in Schwab.  **[CLICK HERE](https://schwab-py.readthedocs.io/en/latest/getting-started.html)** for more information on getting started.
 
 ## Decisions made
 
@@ -40,7 +40,7 @@ This is beyond the scope of our implementation.  Better to reference 'schwab-py'
 - custom python backend code to perform OAuth actions
 - golang (we almost looked at this, then said naaaah!)
 
-The ***main*** reason 'schwab-py' was selected was for the ***ease of use*** for implementing OAuth Authentication into a custom built website (webapp).  Refreshing the OAuth bearer_token is tricky, and 'schwab-py' handles these details natively.
+The ***main*** reason 'schwab-py' was selected was for the ***ease of use*** for implementing OAuth Authentication into a custom built website (webapp).  Refreshing the OAuth bearer_token is tricky, and [schwab-py](https://github.com/alexgolec/schwab-py/tree/main) handles these details natively.
 
 ### Storing of secrets data
 
@@ -48,23 +48,28 @@ Another reason to use this reference design is because secrets data can be put i
 
 ## Notes
 
-Notes go here.  Stubbing out for now.
+Notes go here.
 
 
 
 ## Disclaimer
 
-Use of this code is your responsibility.  We attempt to provide examples for learning only, and by using this codebase or any portions thereof you indemnify the authors from any damages or loss from using this codebase.  By proceeding to view, clone, or adopt any concepts from this code you make them your own.  The author claims no responsibility for any loss incurred from using this code base and/or reference design implementation.
+Use of this code is your responsibility.  The examples provided are for learning only.  By using this codebase or any portions thereof you indemnify the authors from any damages or loss from using this codebase.  By proceeding to view, clone, or adopt any concepts from this code you make them your own.  The author claims no responsibility for any loss incurred from using this code base and/or reference design implementation.
 
-This codebase may not be maintained or up-to-date with the latest schwab-py implementations.  schwab-py is on version 1.4.0 as of the origin of this document.
+This codebase may not be maintained or up-to-date with the latest [schwab-py](https://github.com/alexgolec/schwab-py/tree/main) implementations.  [schwab-py](https://github.com/alexgolec/schwab-py/tree/main) is on version 1.4.0 as of the origin of this document.
 
 ### Versions
 
 #### Site1 LOGIN
 
-OAuth login
-Quotes
+##### Functionality
 
+- OAuth login
+- Quotes
+- Accounts
+- Account Positions
+
+This code uses sessions to store some information, specifically the account which is selected to use in API queires.
 
 #### Site2 INTEGRATIONS
 
@@ -72,4 +77,4 @@ Full list of functions incorporated
 
 #### Site3 AUTOMATIONS
 
-Automation Tasks stubbed out
+Automation Tasks (stubbed out)
