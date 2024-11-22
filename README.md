@@ -1,5 +1,5 @@
 # schwab-py-webframework-reference-design
-Intended reference design for apractical example of using [![schwab-py](https://github.com/alexgolec/schwab-py/tree/main) in a working web application (web framework).  As a note: This codebase not officially associated with 'schwab-py'.  I am an API developer and integrations specialist.  We claim no responsibility for keeping up-to-date with changes in 'schwab-py' in this reference design.  However, the intent is to demonstrate in simple terms how to "create a working web application" using the 'schwab-py' API abstraction library which is built in Python.
+Intended reference design for apractical example of using [schwab-py](https://github.com/alexgolec/schwab-py/tree/main) in a working web application (web framework).  As a note: This codebase not officially associated with 'schwab-py'.  I am an API developer and integrations specialist.  We claim no responsibility for keeping up-to-date with changes in 'schwab-py' in this reference design.  However, the intent is to demonstrate in simple terms how to "create a working web application" using the 'schwab-py' API abstraction library which is built in Python.
 
 ## Donate
 
@@ -28,7 +28,7 @@ These optional components allow this application to run as a production website.
 
 # Setting up your APP in Schwab
 
-This is beyond the scope of our implementation.  Better to reference 'schwab-py' and their documents on how to create an APP in Schwab.  [![CLICK HERE](https://schwab-py.readthedocs.io/en/latest/getting-started.html)] for more information on getting started.
+This is beyond the scope of our implementation.  Better to reference 'schwab-py' and their documents on how to create an APP in Schwab.  **[CLICK HERE](https://schwab-py.readthedocs.io/en/latest/getting-started.html)** for more information on getting started.
 
 ## Decisions made
 
