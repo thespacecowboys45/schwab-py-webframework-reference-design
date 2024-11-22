@@ -2,6 +2,10 @@
 
 Detail the requirements for running this codebase.
 
+## Python3
+
+Unknown if this code runs under python2.  It is highly unlikely, however.
+
 ## Celery
 
 ## Redis

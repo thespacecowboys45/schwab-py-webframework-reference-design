@@ -1,0 +1,31 @@
+{% extends base_template %}
+
+{% block title %}Get Quote{% endblock %}
+
+{% block content %}
+<script src="{{ url_for('static', filename='js/response_data_display.js') }}"></script>    
+<script src="{{ url_for('static', filename='js/quotes.js') }}"></script>    
+
+<div>
+    <label for="quote_input">Enter a symbol:</label>
+    <input type="text" id="quote_input" name="quote_input" required>
+    <button type="button" onclick="submitForm('{{ url_for('quotes.get_quote') }}', 'quote_input')">Submit</button>
+</div>
+
+<br />
+
+<div>
+    <label for="quotes_input">Enter a list of symbols:</label>
+    <input type="text" id="quotes_input" name="quotes_input" required>
+    <button type="button" onclick="submitForm('{{ url_for('quotes.get_quotes') }}', 'quotes_input')">Submit</button>
+</div>
+
+<hr />
+{% include 'quotes/quote_table.html' %}
+<hr />
+<div style="display: flex; flex-direction: column;">
+    <label for="response-data">Response Data:</label>
+    <textarea id="response-data" rows="1" cols="20" readonly></textarea>
+</div>
+
+{% endblock %}

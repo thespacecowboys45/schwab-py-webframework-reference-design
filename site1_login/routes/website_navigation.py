@@ -1,0 +1,30 @@
+from flask import Blueprint, render_template, jsonify, g
+import os
+
+website_navigation_bp = Blueprint('website_navigation', __name__)
+
+# Contact Information route
+@website_navigation_bp.route('/contact')
+def contact():
+    content = "Contact us at: example@example.com"
+    return render_template('website_navigation/contact.html', base_template=g.base_template)
+
+
+# Documentation route
+@website_navigation_bp.route('/documentation')
+def documentation():
+    content = "This is the documentation page. Here you'll find information on how to use this website."
+    return render_template('website_navigation/documentation.html', base_template=g.base_template)
+
+@website_navigation_bp.route('/logout')
+def logout():
+    if g.token_path:
+        if os.path.exists(g.token_path):
+            os.remove(g.token_path)
+            message = f"You have been logged out. {g.token_path} removed from system."
+        else:
+            message = f"You were not logged in to begin with!"
+    else:
+        message = f"No token_path is set.  You must set a token_path."
+
+    return render_template('website_navigation/logout.html', base_template=g.base_template, message=message, login_link_url="")    
