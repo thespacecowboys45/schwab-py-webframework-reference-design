@@ -79,8 +79,8 @@
                         if (data.account_data) {
                             updateResponseData(JSON.stringify(data.account_data, null, 4));
                         } else {
-                            // If no account data, show failure message
-                            updateResponseData("No account data retrieved.  Debug this.");
+                            // If no account data, show entire response from server
+                            updateResponseData(JSON.stringify(data, null, 4));
                         }
 
                         // Hide the banner after 5 seconds

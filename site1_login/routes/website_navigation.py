@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, jsonify, g
+from flask import Blueprint, render_template, jsonify, g, session
 import os
 
 website_navigation_bp = Blueprint('website_navigation', __name__)
@@ -19,6 +19,10 @@ def documentation():
 @website_navigation_bp.route('/logout')
 def logout():
     if g.token_path:
+        # IF we had selected an account to use, unselect it
+        session.pop('accountNumber', None)
+        session.pop('hashValue', None)
+
         if os.path.exists(g.token_path):
             os.remove(g.token_path)
             message = f"You have been logged out. {g.token_path} removed from system."

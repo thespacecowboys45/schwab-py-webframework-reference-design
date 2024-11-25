@@ -44,7 +44,7 @@ The ***main*** reason 'schwab-py' was selected was for the ***ease of use*** for
 
 ### Storing of secrets data
 
-Another reason to use this reference design is because secrets data can be put into environment variables using Pythons 'dotenv' library.  The variables are imported into the webapp using native Python calls to get these datum from the operating system environment.  This is important so that no code written in this (or others) implementation has secrets data stored in the codebase.
+Another decision made in this reference design is to store secrets data in environment variables using Pythons 'dotenv' library.  The variables are imported into the webapp using native Python calls to get these datum from the operating system environment.  Why is this important?  This is important so that no code written in this (or others) implementation has secrets data stored in the codebase.
 
 ## Notes
 
@@ -78,3 +78,8 @@ Full list of functions incorporated
 #### Site3 AUTOMATIONS
 
 Automation Tasks (stubbed out)
+
+# Changelog
+
+##### Version 1.0 (2024)
+- Site 1 released

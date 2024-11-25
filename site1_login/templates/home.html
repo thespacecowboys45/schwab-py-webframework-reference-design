@@ -3,5 +3,11 @@
 {% block title %}Home{% endblock %}
 
 {% block content %}
-    <p>Welcome to the Home Page!<br />Here is some introductory content.<br />The value of environment variable 'VAR1' is: {{ var1_value }}</p>
+    <p>Welcome to the Home Page!<br />
+    <br />
+    Here is some introductory content.<br />
+    <br />
+    The 'REDIRECT_URI' is set to: {{ redirect_uri }}<br />
+    <br/>
+    For authentication to work properly the 'REDIRECT_URI' above should match <strong>exactly</strong> the URI currently found in your web browsers address bar right now.</p>
 {% endblock %}

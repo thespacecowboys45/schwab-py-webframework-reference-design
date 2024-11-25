@@ -7,27 +7,30 @@
  <script src="{{ url_for('static', filename='js/response_data_display.js') }}"></script>    
  <script src="{{ url_for('static', filename='js/accounts.js') }}"></script>    
 
-    <p>User Preferences</p>
-
     <!-- Buttons to fetch account info -->
-    <button onclick="getUserPreferences()">Get User Preferences</button><br />
-    <hr />
-    <p>Positions</p>
-    <br />
-    <button id="get-accounts" onclick="getPositions()">Get POSITIONS</button><br />
-    <hr />
-    <p>Account Information</p>
-
-    <!-- Buttons to fetch account info -->
-    <button onclick="clearAccountSelection()">Clear Selected Account</button><br />
-    <br />
-    <button id="get-account-numbers" onclick="getAccountNumbers()">Get Account Numbers</button><br />
+    <p>Account Information<br />
+    <br />Workflow:
+            <ul>
+                    <li>1) Use 'Get Account Numbers' to retrieve account numbers.</li>
+                    <li>2) Click 'Select' to choose an account to use.</li>
+            </ul>
+    </p>
+    <button id="get-account-numbers" onclick="getAccountNumbers()">Get Account Numbers</button>
+    <button onclick="clearAccountSelection()">Clear Selected Account</button><br />    
     <br />
     <button id="get-account" onclick="getAccount()">Get Account</button><br />    
     <br />
     <button id="get-accounts" onclick="getAccounts()">Get Accounts</button><br />
+    <hr />
 
+    <p>Positions</p>
+    <br />
+    <button id="get-accounts" onclick="getPositions()">Get POSITIONS</button><br />
+    <hr />
 
+    <p>User Preferences</p>
+    <button onclick="getUserPreferences()">Get User Preferences</button><br />
+    <hr />
 
     <!-- Table to display account numbers information -->
     <h3>Account Numbers Table</h3>
@@ -52,7 +55,6 @@
                 <th>aggregatedBalance</th>
                 <th>accountNumber</th>
                 <th>availableFunds</th>
-
             </tr>
         </thead>
         <tbody>
