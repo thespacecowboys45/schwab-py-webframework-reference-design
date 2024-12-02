@@ -1,0 +1,18 @@
+{% extends base_template %}
+
+{% block title %}Documentation{% endblock %}
+
+{% block content %}
+    <p>This is the documentation page. Here you'll find information on how to use this website.</p>
+    <h3>Logging in:</h3>
+    <p>Use the 'login' button to be redirected to Schwab for OAuth authentication.</p>
+    <h3>Account Selection:</h3>
+    <h4>First, select and account</h4>
+    <ul>
+        <li>Step 1 - navigate to 'accounts'</li>
+        <li>Step 2 - use "Get Account Numbers" to retrieve accoutNumbers and the accountHash</li>
+        <li>Step 3 - click to select the account to use.  This will set the session with the accountNumber and accountHash for the account</li>
+        <li>Step 4 - to clear the session use "Clear Selected Account"</li>
+    </ul>
+    <h4>After an account is selected, queries which use the accountHash access it through the session</h4>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% extends base_template %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <p>Welcome to the Home Page!<br />
+    <br />
+    Here is some introductory content.<br />
+    <br />
+    The 'REDIRECT_URI' is set to: {{ redirect_uri }}<br />
+    <br/>
+    For authentication to work properly the 'REDIRECT_URI' above should match <strong>exactly</strong> the URI currently found in your web browsers address bar right now.</p>
+{% endblock %}

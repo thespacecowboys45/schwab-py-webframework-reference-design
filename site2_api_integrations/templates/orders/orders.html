@@ -1,0 +1,367 @@
+{% extends base_template %}
+
+{% block title %}Orders{% endblock %}
+
+{% block content %}
+<script src="{{ url_for('static', filename='js/quotes.js') }}"></script>    
+<script>
+    function adjustTextareaHeight(element) {
+        element.style.height = 'auto'; // Reset the height
+        element.style.height = (element.scrollHeight) + 'px'; // Set it to scrollHeight
+    }
+
+    function updateResponseData(content) {
+        const textarea = document.getElementById('response-data');
+        textarea.value = content;
+        adjustTextareaHeight(textarea);
+    } 
+
+    function displayBanner(message, isError = true) {
+        const banner = document.getElementById('user-message-banner');
+        banner.textContent = message;
+        banner.style.color = isError ? 'red' : 'green';
+        banner.style.display = 'block';
+        setTimeout(() => {
+            banner.style.display = 'none';
+        }, 5000);
+    }
+
+    function validateOrderData(data) {
+        if (!data.symbol) {
+            displayBanner('Symbol is required.');
+            return false;
+        }
+        if (data.type === 'market' && data.price) {
+            displayBanner('Market orders do not require a price.');
+            return false;
+        }
+        if (data.type === 'limit' && !data.price) {
+            displayBanner('Limit orders require a price.');
+            return false;
+        }
+        return true;
+    }
+
+    function placeOrder(route) {
+        const orderData = {
+            action: document.getElementById('order_action').value,
+            type: document.getElementById('order_type').value,
+            price: parseFloat(document.getElementById('order_price').value) || null,
+            quantity: parseInt(document.getElementById('order_quantity').value, 10) || null,
+            symbol: document.getElementById('order_symbol').value.trim()
+        };
+
+        if (!validateOrderData(orderData)) {
+            return;
+        }
+
+        console.log('Placing order with data:', orderData);
+        fetch(route, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderData)
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    displayBanner('Order placed successfully!', false);
+                } else {
+                    displayBanner(data.message || 'Error placing order.');
+                }
+            })
+            .catch(error => {
+                console.error('Error placing order:', error);
+                displayBanner('Error placing order.');
+            });
+    }
+
+    function getQuote(route) {
+        const symbol = document.getElementById('order_symbol').value.trim();
+        if (!symbol) {
+            displayBanner('No symbol provided.');
+            return;
+        }
+
+        console.log(`Fetching quote for symbol: ${symbol}`);
+        fetch(route, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ input: symbol })
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.result) {
+                    const result = JSON.stringify(data.result, null, 4); // Pretty print JSON result
+                    displayBanner(`Current price for ${symbol}: ${data.price}`, false);
+                    updateResponseData(result); // Update the response-data area
+                    
+                    // js function is in static/js/quotes.js
+                    populateTable(data);
+
+                } else {
+                    displayBanner(data.message || 'No quote data returned.');
+                    updateResponseData(''); // Clear response-data area if no result
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching quote:', error);
+                displayBanner('Error fetching quote.');
+                updateResponseData(''); // Clear response-data area if no result
+            });
+    }    
+
+    function updateTable(data) {
+        const table = document.getElementById('table-body');
+        const header = document.getElementById('table-header');
+
+        table.innerHTML = ''; // Clear existing rows
+
+        // Reset header color
+        header.style.color = 'green';
+
+        // Check for error or empty result
+        if (!data || data.length === 0) {
+            header.style.color = 'red';
+            table.innerHTML = `
+                <tr>
+                    <td>error retrieving data</td>
+                    <td>n/a</td>
+                    <td>n/a</td>
+                    <td>n/a</td>
+                    <td>n/a</td>
+                    <td>n/a</td>
+                    <td>n/a</td>
+                    <td>n/a</td>
+                    <td>n/a</td>
+                    <td>n/a</td>
+                </tr>`;
+            return;
+        }
+
+
+        data.forEach(rowData => {
+            const row = document.createElement('tr');
+
+            // Populate row with order details
+            row.innerHTML = `
+                <td>${rowData.accountNumber}</td>
+                <td>${rowData.duration}</td>
+                <td>${rowData.enteredTime}</td>
+                <td>${rowData.price}</td>
+                <td>${rowData.quantity}</td>
+                <td>${rowData.filledQuantity}</td>
+                <td>${rowData.orderId}</td>
+                <td>${rowData.orderType}</td>
+                <td>${rowData.session}</td>
+                <td>${rowData.status}</td>
+            `;
+
+            table.appendChild(row);
+        });
+    }
+
+    function getOrders(url, params) {
+        console.log(`Fetching orders from ${url} with params:`, params);
+        updateResponseData('fetching');
+
+        fetch(url, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(params)
+        })
+        .then(response => response.json())
+        .then(data => {
+            const banner = document.getElementById('user-message-banner');
+            if (data.message) {
+                banner.textContent = data.message;
+                banner.style.display = 'block';
+
+                if (data.order_data) {
+                    updateTable(data.order_data);
+                    updateResponseData(JSON.stringify(data.order_data, null, 4));
+                } else {
+                    updateResponseData("No data retrieved. Debug this.");
+                }
+
+                setTimeout(() => {
+                    banner.style.display = 'none';
+                }, 5000);
+            }
+        })
+        .catch(error => console.error('Error fetching orders:', error));
+    }
+
+    function fetchData(route) {
+        const params = {
+            max_results: document.getElementById('max-results').value,
+            from_entered_datetime: document.getElementById('from-entered-datetime').value,
+            to_entered_datetime: document.getElementById('to-entered-datetime').value,
+            status: document.getElementById('status').value
+        };
+        getOrders(route, params);
+    }
+</script>
+<h2>Place new order</h2>
+<form>
+    <h3>Place a New Order</h3>
+    <table style="width: 100%; margin-bottom: 20px;">
+        <tr>
+            <td style="width: 200px; text-align: right; padding-right: 10px;">
+                <label for="order_action">Action:</label>
+            </td>
+            <td>
+                <select id="order_action">
+                    <option value="buy" selected>Buy</option>
+                    <option value="sell">Sell</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: right; padding-right: 10px;">
+                <label for="order_type">Order Type:</label>
+            </td>
+            <td>
+                <select id="order_type">
+                    <option value="market">Market</option>
+                    <option value="limit" selected>Limit</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: right; padding-right: 10px;">
+                <label for="order_price">Price:</label>
+            </td>
+            <td>
+                <input type="number" id="order_price" step="0.01">
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: right; padding-right: 10px;">
+                <label for="order_quantity">Quantity:</label>
+            </td>
+            <td>
+                <input type="number" id="order_quantity" min="1">
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: right; padding-right: 10px;">
+                <label for="order_symbol">Symbol:</label>
+            </td>
+            <td>
+                <input type="text" id="order_symbol" value="AAPL">
+            </td>
+        </tr>
+    </table>
+    <div style="text-align: center;">
+        <button type="button" onclick="placeOrder('/place_order')">Place Order</button>
+        <button type="button" onclick="getQuote('/get_quote')">Get Current Quote</button>
+    </div>
+
+    <!-- include table for rendering the quote retrieved -->
+    {% include 'quotes/quote_table.html' %}
+</form>
+
+<h2>View and Manage Orders</h2>
+
+<form>
+    <table style="width: 100%; margin-bottom: 20px;">
+        <tr>
+            <td style="width: 200px; text-align: right; padding-right: 10px;">
+                <label for="max-results">Max Results:</label>
+            </td>
+            <td>
+                <select id="max-results">
+                    <option value="none">None</option>
+                    <option value="5" selected>5</option>
+                    <option value="10">10</option>
+                    <option value="25">25</option>
+                    <option value="50">50</option>
+                    <option value="3000">3000</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: right; padding-right: 10px;">
+                <label for="from-entered-datetime">From Entered Datetime (ISO-8601):</label>
+            </td>
+            <td>
+                <input type="text" id="from-entered-datetime" placeholder="yyyy-MM-dd'T'HH:mm:ss.SSSZ">
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: right; padding-right: 10px;">
+                <label for="to-entered-datetime">To Entered Datetime (ISO-8601):</label>
+            </td>
+            <td>
+                <input type="text" id="to-entered-datetime" placeholder="yyyy-MM-dd'T'HH:mm:ss.SSSZ">
+            </td>
+        </tr>
+        <tr>
+            <td style="text-align: right; padding-right: 10px;">
+                <label for="status">Status:</label>
+            </td>
+            <td>
+                <select id="status">
+                    <option value="" selected>None</option>
+                    <option value="AWAITING_PARENT_ORDER">AWAITING_PARENT_ORDER</option>
+                    <option value="AWAITING_CONDITION">AWAITING_CONDITION</option>
+                    <option value="AWAITING_STOP_CONDITION">AWAITING_STOP_CONDITION</option>
+                    <option value="AWAITING_MANUAL_REVIEW">AWAITING_MANUAL_REVIEW</option>
+                    <option value="ACCEPTED">ACCEPTED</option>
+                    <option value="AWAITING_UR_OUT">AWAITING_UR_OUT</option>
+                    <option value="PENDING_ACTIVATION">PENDING_ACTIVATION</option>
+                    <option value="QUEUED">QUEUED</option>
+                    <option value="WORKING">WORKING</option>
+                    <option value="REJECTED">REJECTED</option>
+                    <option value="PENDING_CANCEL">PENDING_CANCEL</option>
+                    <option value="CANCELED">CANCELED</option>
+                    <option value="PENDING_REPLACE">PENDING_REPLACE</option>
+                    <option value="REPLACED">REPLACED</option>
+                    <option value="FILLED">FILLED</option>
+                    <option value="EXPIRED">EXPIRED</option>
+                    <option value="NEW">NEW</option>
+                    <option value="AWAITING_RELEASE_TIME">AWAITING_RELEASE_TIME</option>
+                    <option value="PENDING_ACKNOWLEDGEMENT">PENDING_ACKNOWLEDGEMENT</option>
+                    <option value="PENDING_RECALL">PENDING_RECALL</option>
+                    <option value="UNKNOWN">UNKNOWN</option>
+                </select>
+            </td>
+        </tr>
+    </table>
+
+    <div style="text-align: center;">
+        <button type="button" onclick="fetchData('/get_orders_for_account')">Get Orders For Account</button>
+        <button type="button" onclick="fetchData('/get_orders_for_all_linked_accounts')">Get Orders For All Linked Accounts</button>
+    </div>
+</form>
+<br />
+<br />
+
+    <!-- Table to display order data -->
+    <table border="1" >
+        <thead id="table-header" style="color: green;">
+            <tr>
+                <th>Account Number</th>
+                <th>Duration</th>
+                <th>Entered Time</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Filled Quantity</th>
+                <th>Order ID</th>
+                <th>Order Type</th>
+                <th>Session</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody id="table-body">
+            <!-- Orders will be dynamically inserted here -->
+        </tbody>
+    </table>
+
+<hr />
+
+<div style="display: flex; flex-direction: column;">
+    <label for="response-data">Response Data:</label>
+    <textarea id="response-data" rows="1" cols="20" readonly></textarea>
+</div>
+{% endblock %}

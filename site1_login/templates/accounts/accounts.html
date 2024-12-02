@@ -1,0 +1,90 @@
+<!-- 'base_template' is a variable set in the route -->
+{% extends base_template %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+ <script src="{{ url_for('static', filename='js/response_data_display.js') }}"></script>    
+ <script src="{{ url_for('static', filename='js/accounts.js') }}"></script>    
+
+    <!-- Buttons to fetch account info -->
+    <p>Account Information<br />
+    <br />Workflow:
+            <ul>
+                    <li>1) Use 'Get Account Numbers' to retrieve account numbers.</li>
+                    <li>2) Click 'Select' to choose an account to use.</li>
+            </ul>
+    </p>
+    <button id="get-account-numbers" onclick="getAccountNumbers()">Get Account Numbers</button>
+    <button onclick="clearAccountSelection()">Clear Selected Account</button><br />    
+    <br />
+    <button id="get-account" onclick="getAccount()">Get Account</button><br />    
+    <br />
+    <button id="get-accounts" onclick="getAccounts()">Get Accounts</button><br />
+    <hr />
+
+    <p>Positions</p>
+    <br />
+    <button id="get-accounts" onclick="getPositions()">Get POSITIONS</button><br />
+    <hr />
+
+    <p>User Preferences</p>
+    <button onclick="getUserPreferences()">Get User Preferences</button><br />
+    <hr />
+
+    <!-- Table to display account numbers information -->
+    <h3>Account Numbers Table</h3>
+    <table id="account-numbers-table" border="1">
+        <thead>
+            <tr>
+                <th>Account Number</th>
+                <th>Hash Value</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Dynamic content will be added here -->
+        </tbody>
+    </table>
+
+    <!-- Table to display account information -->
+    <h3>Account Information Table</h3>
+    <table id="accounts-table" border="1" style="margin-top: 20px;">
+        <thead>
+            <tr>
+                <th>aggregatedBalance</th>
+                <th>accountNumber</th>
+                <th>availableFunds</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Dynamic content will be added here -->
+        </tbody>
+    </table>
+
+    <!-- Table to display account information -->
+    <h3>Account Positions Table</h3>
+    <table border="1" style="margin-top: 20px;">
+        <thead id="account-positions-table-header">
+            <tr>
+                <th>accountNumber</th>
+                <th>symbol</th>
+                <th>assetType</th>
+                <th>averagePrice</th>
+                <th>longQuantity</th>
+                <th>shortQuantity</th>
+                <th>taxLotAverageLongPrice</th>
+            </tr>
+        </thead>
+        <tbody id="account-positions-table-body">
+            <!-- Dynamic content will be added here -->
+        </tbody>
+    </table>    
+
+    <hr />
+    <div style="display: flex; flex-direction: column;">
+        <label for="response-data">Response Data:</label>
+        <textarea id="response-data" rows="1" cols="20" readonly></textarea>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+
+        /* Conditional banner styles */
+        .status-banner {
+            padding: 10px;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .logged-in {
+            background-color: #32CD32; /* Light green */
+        }
+        .not-logged-in {
+            background-color: #FF0000; /* Bright red */
+        }        
+
+        .current-account-banner {
+            padding: 10px;
+            text-align: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .account-selected {
+            background-color: #32CD32; /* Light green */
+        }
+
+        .no-account-selected {
+            background-color: yellow;
+            color: black;
+        }        
+        
+        /* Primary navigation bar */
+        nav.main-nav { 
+            background: #333; 
+            padding: 10px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+        }
+        
+        /* Second navigation bar */
+        nav.account-tools { 
+            background: #00aaff; /* Light blue shade */
+            padding: 10px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 10px;
+        }
+
+        nav.position-tools { 
+            background: #1a75ff; /* Light blue shade */
+            padding: 10px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 10px;
+        }        
+
+        nav.quote-tools { 
+            background: #1ab2ff; /* Light blue shade */
+            padding: 10px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 10px;
+        }
+
+        nav.pricehistory-tools { 
+            background: #1a75ff; /* Light blue shade */
+            padding: 10px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 10px;
+        }        
+
+        nav.search-and-fundamental-tools { 
+            background: #1ab2ff; /* Light blue shade */
+            padding: 10px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 10px;
+        } 
+
+        nav.transaction-tools { 
+            background: #1a75ff; /* Light blue shade */
+            padding: 10px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 10px;
+        }    
+
+        nav.trade-tools { 
+            background: #33bbff; /* Light blue shade */
+            padding: 10px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* Second navigation bar */
+        nav.dev-tools { 
+            background: #ADD8E6; /* Light blue shade */
+            padding: 10px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 10px;
+        }        
+
+        nav.automations-tools { 
+            background: #ff9900;
+            padding: 10px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 10px;
+        } 
+
+        nav.notification-tools { 
+            background: #ff8080;
+            padding: 10px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 10px;
+        } 
+
+
+        .nav-links, .dev-links, .account-links, .position-links, .quote-links, .trade-links., .pricehistory-links, .search-and-fundamental-links, .transaction-links, .automations-links, .notification-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a, .auth-links a, .dev-links a, .position-links a, .account-links a, .quote-links a, , .search-and-fundamental-links a, .transaction-links a, .trade-links a, .automations-links a, .pricehistory-links a, .notification-links a { 
+            color: white; 
+            text-decoration: none; 
+            padding: 5px;
+        }
+        .nav-links a:hover, .auth-links a:hover, .dev-links a:hover, .account-links :hover, .position-links :hover, .quote-links :hover, , .search-and-fundamental-links :hover, .transaction-links :hover, .trade-links :hover, .pricehistory-links :hover, .automations-links :hover, .notification-links :hover { 
+            text-decoration: underline; 
+        }
+
+        /* Pushes auth links to the far right */
+        .auth-links {
+            margin-left: auto; 
+            display: flex;
+            gap: 10px;
+        }
+
+        a {
+            color: white;
+        }
+
+        a:visited {
+            color: yellow;
+        }
+        
+        .content { padding: 20px; }
+    </style>
+</head>
+<body>
+    <!-- User Messages banner -->
+    <div id="user-message-banner" style="display:none; background-color: #f8d7da; padding: 10px; color: #721c24; text-align: center; font-weight: bold;">
+        <!-- The user message will be injected here -->
+    </div>
+
+    <!-- Conditional Banner at the top -->
+    {% if not login_link_url %}
+    <div class="status-banner logged-in">
+        YOU ARE LOGGED IN TO SCHWAB
+    </div>
+    {% else %}
+    <div class="status-banner not-logged-in">
+        YOU ARE NOT LOGGED IN
+    </div>
+    {% endif %}   
+
+    <!-- Account selection banner -->
+    {% if session.get('accountNumber') %}
+    <div class="current-account-banner account-selected">
+        Selected Account: {{ session['accountNumber'] }}
+    </div>
+    {% else %}
+    <div class="current-account-banner no-account-selected">
+        No account selected
+    </div>
+    {% endif %}     
+
+    <!-- Main navigation -->
+    <nav class="main-nav">
+        <div class="nav-links">
+            <a href="/">Home</a>
+            <a href="/documentation">Documentation</a>
+            <a href="/contact">Contact</a>
+        </div>
+
+        <!-- Auth links on the right -->
+        <div class="auth-links">
+            {% if login_link_url %}
+                <a href="{{ login_link_url }}">Login</a>
+            {% else %}
+                <a href="/logout">Logout</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <nav class="to-implement">
+        <div class="to-implement">
+            <span>TODO: Options. Standardize code patterns in javascript.  Logging(?)  ALERTS!  CHARTS!</span>
+        </div>
+    </nav>    
+
+    <!-- Account Tools navigation bar -->
+    <nav class="account-tools">
+        <span>Account Tools</span>
+        <div class="account-links">
+            <a href="/accounts">Accounts</a>
+            <a href="/accounts">Positions</a>
+            <a href="/accounts">User Preferences</a>
+        </div>
+    </nav>
+
+    <!-- Quote Tools navigation bar -->
+    <nav class="quote-tools">
+        <span>Quote Tools</span>
+        <div class="quote-links">
+            <a href="/quotes">Get Quote</a>
+            <a href="/schwab_stream">Schwab StreamClient</a>
+        </div>
+    </nav>
+
+    <nav class="pricehistory-tools">
+        <span>Price History Tools</span>
+        <div class="pricehistory-links">
+            <a href="/pricehistory">Price History</a>
+        </div>
+    </nav>    
+
+    <nav class="search-and-fundamental-tools">
+        <span>Market Data</span>
+        <div class="search-and-fundamental-links">
+            <a href="/search_and_fundamentals">Instrument Searching and Fundamentals</a>
+            <a href="/movers">Movers</a>
+            <a href="/market_hours">Market Hours</a>
+        </div>
+    </nav>    
+
+    <nav class="transaction-tools">
+        <span>Transaction Tools</span>
+        <div class="transaction-tools">
+            <a href="/transactions">Transactions</a>
+        </div>
+    </nav>    
+
+    <!-- Trade Tools navigation bar -->
+    <nav class="trade-tools">
+        <span>Order & Trade Tools</span>
+        <div class="trade-links">
+            <a href="/orders">Orders</a>
+            <a href="/trade/trade">Trade</a>
+        </div>
+    </nav>    
+
+    <!-- Development Tools navigation bar -->
+    <nav class="dev-tools">
+        <span>Development Tools</span>
+        <div class="dev-links">
+            <a href="/debug">Debug</a> |
+            <a href="/get_worker_pid">Get Worker PID</a> |
+            <a href="/asyncio_test">AsyncIO TEST</a> |
+            <a href="/stream_test">SSE Streaming TEST</a> |
+            <a href="/celery_app">Celery</a> 
+
+        </div>
+    </nav>
+
+    <nav class="automations-tools">
+        <span>Automations Tools</span>
+        <div class="automations-links">
+            <a href="/automations/home">Automations Home</a>
+        </div>
+    </nav>    
+
+    <nav class="notification-tools">
+        <span>Notification Tools</span>
+        <div class="notification-links">
+            <a href="/notifications/">Notifications Home</a>
+        </div>
+    </nav>        
+            
+
+    <div class="content">
+        <h1>{% block title %}{% endblock %}</h1>
+        <p>{% block content %}{% endblock %}</p>
+    </div>
+</body>
+</html>

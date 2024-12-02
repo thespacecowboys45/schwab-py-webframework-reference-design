@@ -1,0 +1,182 @@
+{% extends base_template %}
+
+{% block title %}Movers{% endblock %}
+
+{% block content %}
+<script>
+    // Adjust textarea height dynamically
+    function adjustTextareaHeight(element) {
+        element.style.height = 'auto'; // Reset the height
+        element.style.height = (element.scrollHeight) + 'px'; // Set it to scrollHeight
+    }
+
+    // Update response content
+    function updateResponseData(content) {
+        const textarea = document.getElementById('response-data');
+        textarea.value = content;
+        adjustTextareaHeight(textarea); // Adjust height after content update
+    }
+
+
+    // Update HTML table dynamically
+    function updateTable(screeners) {
+        const table = document.getElementById('movers-table-body');
+        table.innerHTML = ''; // Clear the existing table content
+
+        console.log("Screeners data: " + screeners);
+
+/*
+        // Create the table header
+        const header = `
+            <tr>
+                <th>Symbol</th>
+                <th>Last Price</th>
+                <th>Net Change</th>
+                <th>Total Volume</th>
+                <th>Volume</th>
+            </tr>
+        `;
+        table.insertAdjacentHTML('beforeend', header);
+*/
+        // Populate table rows with data
+        screeners.forEach(screener => {
+            const row = `
+                <tr>
+                    <td>${screener.symbol}</td>
+                    <td>${screener.lastPrice}</td>
+                    <td>${screener.netChange}</td>
+                    <td>${screener.totalVolume}</td>
+                    <td>${screener.volume}</td>
+                </tr>
+            `;
+            table.insertAdjacentHTML('beforeend', row);
+        });
+    }    
+
+    // AJAX call function
+    async function submitForm(url, params) {
+        console.log(`Fetching data from ${url} with params:`, JSON.stringify(params));
+        updateResponseData("fetching data for: " + JSON.stringify(params)); // Display response data
+        //updateTable([]); // Clear table
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(params)
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            
+            updateResponseData(JSON.stringify(data, null, 2)); // Display response data
+
+            // Check and update the table with screeners data
+            if (data && data.result && data.result.screeners) {
+                updateTable(data.result.screeners);
+            } else {
+                updateTable([]); // Clear table if no screeners found
+            }
+
+        } catch (error) {
+            console.error(error);
+            updateResponseData(`Failed to fetch data: ${error.message}`);
+            updateTable([]); // Clear table on error
+        }
+    }
+
+    function fetchData(route) {
+        const params = {
+            index: document.getElementById('index').value,
+            sortorder: document.getElementById('sortorder').value,
+            frequency: document.getElementById('frequency').value
+        };
+        submitForm(route, params);
+    }    
+
+</script>
+<form>
+    <h3>Get Movers</h3>
+    <table style="width: 100%; margin-bottom: 20px;">
+        <tr>
+            <td style="width: 200px; text-align: right; padding-right: 10px;">
+                <label for="index">Index:</label>
+            </td>
+            <td>
+                <select id="index">
+                    <option value="DJI">DJI</option>
+                    <option value="COMPX" >COMPX</option>
+                    <option value="SPX" >SPX</option>
+                    <option value="NYSE" >NYSE</option>
+                    <option value="NASDAQ" selected>NASDAQ</option>
+                    <option value="OTCBB">OTCBB</option>
+                    <option value="INDEX_ALL">INDEX_ALL</option>
+                    <option value="EQUITY_ALL">EQUITY_ALL</option>
+                    <option value="OPTION_ALL">OPTION_ALL</option>
+                    <option value="OPTION_PUT">OPTION_PUT</option>
+                    <option value="OPTION_CALL">OPTION_CALL</option>
+                </select> The index to search
+            </td>
+        </tr>   
+        <tr>
+            <td style="text-align: right; padding-right: 10px;">
+                <label for="sortorder">Sort Order:</label>
+            </td>
+            <td>
+                <select id="sortorder">
+                    <option value="VOLUME" selected>VOLUME</option>
+                    <option value="TRADES" >TRADES</option>
+                    <option value="PERCENT_CHANGE_UP" >PERCENT_CHANGE_UP</option>
+                    <option value="PERCENT_CHANGE_DOWN" >PERCENT_CHANGE_DOWN</option>
+                </select> Sort by a particular attribute
+            </td>
+        </tr>                   
+        <tr>
+            <td style="text-align: right; padding-right: 10px;">
+                <label for="frequency">Frequency:</label>
+            </td>
+            <td>
+                <select id="frequency">
+                    <option value="ZERO" selected>ZERO</option>
+                    <option value="ONE" >ONE</option>
+                    <option value="FIVE" >FIVE</option>
+                    <option value="TEN" >TEN</option>
+                    <option value="THIRTY" >THIRTY</option>
+                    <option value="SIXTY">SIXTY</option>
+                </select> To return movers with the specified directions of up or down
+            </td>
+        </tr>   
+
+    </table>
+</form> 
+
+<div style="text-align: center;">
+    <button type="button" onclick="fetchData('{{ url_for('search_and_fundamentals.get_movers') }}')">Get Movers</button>
+</div>
+
+
+<!-- Dynamic Table for Screeners -->
+<table id="movers-table" style="width: 900px; margin-bottom: 20px; text-align: left;" border="1">
+   <thead id="movers-table-header" style="color: green;">
+        <tr>
+            <th>Symbol</th>
+            <th>Last Price</th>
+            <th>Net Change</th>
+            <th>Total Volume</th>
+            <th>Volume</th>
+        </tr>
+    </thead>
+    <tbody id="movers-table-body">    
+    <!-- Dynamic content will be inserted here -->
+</table>
+
+<hr />
+
+<div style="display: flex; flex-direction: column;">
+    <label for="response-data">Response Data:</label>
+    <textarea id="response-data" rows="1" cols="20" readonly></textarea>
+</div>
+
+{% endblock %}
