@@ -1,0 +1,7 @@
+schwab-py
+Flask
+python-dotenv
+eventlet
+gevent
+celery
+redis

@@ -1,0 +1,226 @@
+{% extends base_template %}
+
+{% block title %}Trade{% endblock %}
+
+{% block content %}
+<script src="{{ url_for('static', filename='js/quotes.js') }}"></script>    
+<script src="{{ url_for('static', filename='js/response_data_display.js') }}"></script>    
+
+<script>
+    // Function to confirm the user's trade details
+    function confirmTrade(formData) {
+        const { symbol, quantity, price, instruction, orderType } = formData;
+        let message = `WARNING: You are about to place a live trade with the following instructions:\n\n`;
+
+        message += `${instruction.toUpperCase()} ${orderType.toUpperCase()} quantity: ${quantity} for ${symbol}`;
+        if (orderType.toLowerCase() === "limit") {
+            message += ` at price ${price}`;
+        }
+        message += `\n\nProceed Y/N?`;
+
+        return confirm(message); // Opens a confirmation dialog and returns true/false
+    }
+
+
+    // AJAX call function
+    async function submitForm(endpoint, inputId) {
+        const inputField = document.getElementById(inputId);
+        const inputData = inputField.value;
+
+        updateResponseData("fetching quotes for: " + inputData); // Display response data
+
+        try {
+            const response = await fetch(endpoint, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ input: inputData })
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            populateTable(data);
+            updateResponseData(JSON.stringify(data, null, 2)); // Display response data
+
+        } catch (error) {
+            console.error(error);
+            populateTable(null); // Pass null to indicate an error
+            updateResponseData(`Failed to fetch data: ${error.message}`);
+
+        }
+    }
+
+    // Validate form data
+    function validateFormData(formData) {
+        const { symbol, quantity, price, order_type } = formData;
+
+        if (!symbol || !quantity) {
+            alert("Symbol and Quantity are required.");
+            return false;
+        }
+
+        if (order_type === "market" && price) {
+            alert("Market orders do not require a price.");
+            return false;
+        }
+
+        if (order_type === "limit" && !price) {
+            alert("Limit orders require a price.");
+            return false;
+        }
+
+        return true;
+    }
+
+
+    // stub
+    function validateFormParams(params) {
+        return true
+    }       
+
+    // Submit form data via AJAX
+    async function fetchData(route, formId) {
+        const form = document.getElementById(formId);
+        const formData = {
+            symbol: form.querySelector("input[name='symbol']").value.trim(),
+            quantity: form.querySelector("input[name='quantity']").value.trim(),
+            price: form.querySelector("input[name='price']").value.trim(),
+            instruction: form.querySelector("select[name='instruction']").value,
+            orderType: form.querySelector("select[name='orderType']").value
+        };
+
+        if (!validateFormData(formData)) {
+            return; // Exit if validation fails
+        }
+
+        // Show confirmation modal
+        if (!confirmTrade(formData)) {
+            console.log("CANCELING TRADE");
+            return; // Exit if user cancels
+        }   
+        
+        console.log("PLACING LIVE TRADE");     
+
+        try {
+            const response = await fetch(route, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            updateResponseData(JSON.stringify(data, null, 2));
+        } catch (error) {
+            console.error(error);
+            alert(`Error submitting the order: ${error.message}`);
+        }
+    }    
+
+</script>
+
+<p>Notes for developer:  demonstrates buy/sell market + buy/sell limit.</p>
+
+<h3>Get a quotation:</h3>
+<div>
+    <label for="quote_input">Enter a symbol:</label>
+    <input type="text" id="quote_input" name="quote_input" required>
+    <button type="button" onclick="submitForm('{{ url_for('quotes.get_quote') }}', 'quote_input')">Submit</button>
+    <br />
+    <br />
+    {% include 'quotes/quote_table.html' %}
+</div>
+
+<h3>Place a Trade</h3>
+<table border="1" style="width: 900px; margin-top: 20px;">
+    <thead>
+        <tr>
+            <th>Symbol</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Buy/Sell</th>
+            <th>Order Type</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr id="trade-form">
+            <td>
+                <input type="text" name="symbol" placeholder="Symbol" value="AAPL" required>
+            </td>
+            <td>
+                <input type="number" name="quantity" placeholder="Quantity" value="1" required>
+            </td>
+            <td>
+                <input type="number" name="price" placeholder="Price" value="1">
+            </td>
+            <td>
+                <select name="instruction">
+                    <option value="buy">Buy</option>
+                    <option value="sell">Sell</option>
+                </select>
+            </td>
+            <td>
+                <select name="orderType">
+                    <option value="market">Market</option>
+                    <option value="limit" selected>Limit</option>
+                </select>
+            </td>
+            <td>
+                <button type="button" onclick="fetchData('/trade/place_order', 'trade-form')">Submit</button>
+            </td>
+        </tr>
+    </tbody>
+</table>
+
+    
+    <hr />
+
+    <hr />
+    <div style="display: flex; flex-direction: column;">
+        <label for="response-data">Response Data:</label>
+        <textarea id="response-data" rows="1" cols="20" readonly></textarea>
+    </div>   
+    <hr />
+    <p>This is the trade page.</p>
+    <p>Schema for Buy 'MARKET': Stock</p>
+    <ul>
+        <li>orderType</li>
+        <li>session</li>
+        <li>duration</li>
+        <li>orderStrategyType</li>
+        <li>orderLegCollection</li>
+        <li><ul>
+            <li>instruction</li>
+            <li>quantity</li>
+            <li>instrument</li>
+            <li><ul>
+                <li>symbol</li>
+                <li>assetType</li>
+            </ul></li>
+        </ul></li>
+    </ul>
+    <p>Schema for Buy 'LIMIT': Stock</p>
+    <ul>
+        <li>orderType</li>
+        <li>session</li>
+        <li>duration</li>
+        <li>orderStrategyType</li>
+        <li>orderLegCollection</li>
+        <li><ul>
+            <li>instruction</li>
+            <li>quantity</li>
+            <li>instrument</li>
+            <li><ul>
+                <li>symbol</li>
+                <li>assetType</li>
+            </ul></li>
+        </ul></li>
+    </ul>
+    <hr />     
+{% endblock %}

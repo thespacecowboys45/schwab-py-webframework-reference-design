@@ -1,0 +1,71 @@
+{% extends base_template %}
+
+{% block title %}Documentation{% endblock %}
+
+{% block content %}
+    <p>This is the documentation page. Here you'll find information on how to use this web application.</p>
+    <h1>Workflow</h1>
+    <p>The workflow for activating the API for use consists of:<br />
+        <ul>
+            <li>Logging in to Schwab</li>
+            <li>Selecting an account</li>
+        </ul>
+        <br />
+    This "activates" everything you will need to make further API calls to Schwab using this web
+    application.<br />
+    <br />
+    Logging in performs the OAuth authentication and creates a token file.  The token
+    file is used in subsequent API requests.<br />
+    <br />
+    Selecting an account stores the 'accountHash' of the account in a session.  Yes, the session
+    uses browser cookies, so if you need to do so enable cookies to be used in your browser.
+    The account 'accountHash' is used in some (but not all) API requests to schwab.<br />
+    <br />
+    So, the first step is to navigate to the 'accounts' tab (in this web application) and list of accounts which you chose to make available.  The accounts you chose during the OAuth login
+    workflow with Schwab will be the ones visible and available after you login to Schwab.
+    </p>
+    <h3>Logging in:</h3>
+    <h4>First, login to Schwab.</h4>
+    <p>Use the 'login' button to be redirected to Schwab for OAuth authentication.</p>
+    <h3>Account Selection:</h3>
+    <h4>Second, select an account.</h4>
+    <ul>
+        <li>Step 1 - navigate to 'accounts'</li>
+        <li>Step 2 - use "Get Account Numbers" to retrieve accoutNumbers and the accountHash</li>
+        <li>Step 3 - click to select the account to use.  This will set the session with the accountNumber and accountHash for the account</li>
+        <li>Step 4 - to clear the session use "Clear Selected Account"</li>
+    </ul>
+    <h4>After an account is selected, queries which use the accountHash access the accountHash using the session.</h4>
+    <hr />
+    <h1>Web framework architecture:</h1>
+    <p>The web framework architecture is composed of:<br />
+        <ul>
+            <li>Templates (*.html)</li>
+            <li>Static files (*.js)</li>
+            <li>Routes</li>
+            <li>Services</li>
+            <li>Tasks</li>
+        </ul>
+        <br />
+    The basics are:<br />
+    <br />
+    The framework registers 'routes' which correspond to URI locations in the browser.<br />
+    <br />
+    Templates contain the .html code for the web pages.  The .html pages may, sometimes, include
+    .js files for buttons and user-interactions.<br />
+    <br />
+    When a user clicks buttons in the web page, the buttons invoke javascript functions which send web requests to 'routes'.<br />
+    <br/>
+    The 'routes' use 'services' in order to perform work including making API requests to Schwab and retrieving data via the API.<br />
+    <br />
+    This API abstraction layer is built on top of 'schwab-py'.<br />
+    <br />
+    Tasks can run in the background using Celery.<br />
+    <br />
+    When a task is invoked then Flask (e.g. this web
+    application) starts a task in Celery.  Celery is a separate framework for running python 
+    code.  Any task running in Celery do not have access to any python namespaces available to the
+    web application.  Celery is, essentially, a separate process management system.  So, any information the task needs to do its job must be passed to that task on task startup.
+    <br />
+
+{% endblock %}

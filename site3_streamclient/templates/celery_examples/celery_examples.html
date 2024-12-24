@@ -1,0 +1,91 @@
+{% extends base_template %}
+
+{% block title %}Celery Page{% endblock %}
+
+{% block content %}
+    <!-- From: https://www.songho.ca/misc/logger/logger.html -->
+    <script src="{{ url_for('static', filename='js/Logger.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/response_data_display.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/celery_examples.js') }}"></script>
+ 
+    <h3>Celery Health</h3>
+    <p>Celery Health: <span id="celery_health"></span></p>    
+
+    <button id="get-health-button" onclick="getCeleryHealth()">Get Celery Health</button>        
+    
+    <hr /> 
+    <div class="asyncio-template-task-container">
+        <h3>AsyncIO Task [ one-time asyncio task ]</h3>
+        <div class="asyncio-refresh-controls">
+            <input type="checkbox" id="task_asyncio_one_time_auto_refresh_checkbox" onChange="onChange_taskAutoRefreshCheckbox('asyncio_one_time')">Auto refresh
+            <input type="number" id="task_status_asyncio_one_time_refresh_frequency" onInput="onInput_taskRefreshFrequency('asyncio_one_time');" style="width: 3em;" min="1" value="5">
+            <label for="task_status_asyncio_one_time_refresh_frequency">Refresh frequency</label>
+            <span id="task_status_asyncio_one_time_countdown" class="task-status-countdown"></span>
+        </div>
+        <br />
+        <div>
+            <button  onclick="startTemplateTask('asyncio_one_time')">Start Asyncio Task</button>       
+            <button  onclick="stopTemplateTask('asyncio_one_time')">Stop Asyncio Task</button>  
+            <button  onclick="statusTemplateTask('asyncio_one_time')">Status Asyncio Task [ one-time ]</button>
+            <br />
+        </div>  
+        <br /> 
+        <table border="1">
+            <thead>
+                <th>Running Status</th>
+                <th>Task Status</th>
+                <th>Task Result</th>
+                <th>Last Update Time</th>
+            </thead>
+            <tbody id="poller-status-table-body">
+                <tr><td><span id='task_running_status_asyncio_one_time' placeholder="tbd"></span></td>
+                    <td><span id='task_status_asyncio_one_time' placeholder="tbd"></span></td>
+                    <td><span id='task_result_asyncio_one_time' placeholder="tbd"></span></td>
+                    <td><span id='task_last_update_time_asyncio_one_time' placeholder="tbd"></span></td></tr>
+            </tbody>
+        </table>   
+    </div>
+    <hr />
+    <div class="poller-template-task-container">
+        <h3>Poller Template Task - polls a REDIS FLAG</h3>
+        <div class="poller-refresh-controls">
+            <input type="checkbox" id="task_poller_auto_refresh_checkbox" onChange="onChange_taskAutoRefreshCheckbox('poller')">Auto refresh
+            <input type="number" id="task_status_poller_refresh_frequency" onInput="onInput_taskRefreshFrequency('poller');" style="width: 3em;" min="1" value="5">
+            <label for="task_status_poller_refresh_frequency">Refresh frequency</label>
+            <span id="task_status_poller_countdown" class="task-status-countdown"></span>
+        </div>
+        <br />
+        <div>
+            <button onClick="startTemplateTask('poller')">Start Poller Task</button>
+            <button onClick="stopTemplateTask('poller')">Stop Poller Task</button>
+            <button onClick="statusTemplateTask('poller')">Status Poller Task</button>
+        </div>
+        <br />
+        <table border="1">
+            <thead>
+                <th>Running Status</th>
+                <th>Task Status</th>
+                <th>Task Result</th>
+                <th>Last Update Time</th>
+            </thead>
+            <tbody id="poller-status-table-body">
+                <tr><td><span id='task_running_status_poller' placeholder="tbd"></span></td>
+                    <td><span id='task_status_poller' placeholder="tbd"></span></td>
+                    <td><span id='task_result_poller' placeholder="tbd"></span></td>
+                    <td><span id='task_last_update_time_poller' placeholder="tbd"></span></td></tr>
+            </tbody>
+        </table>
+    </div>
+    <hr />
+    <h3>Queue Template Task - examines a REDIS QUEUE</h3>
+    <hr />
+
+    <hr />
+
+    <div style="display: flex; flex-direction: column;">
+        <label for="response-data">Response Data:</label>
+        <textarea id="response-data" rows="1" cols="20" readonly></textarea>
+    </div>
+
+
+{% endblock %}

@@ -1,0 +1,97 @@
+{% extends base_template %}
+
+{% block title %}Market Hours{% endblock %}
+
+{% block content %}
+<script>
+    // Adjust textarea height dynamically
+    function adjustTextareaHeight(element) {
+        element.style.height = 'auto'; // Reset the height
+        element.style.height = (element.scrollHeight) + 'px'; // Set it to scrollHeight
+    }
+
+    // Update response content
+    function updateResponseData(content) {
+        const textarea = document.getElementById('response-data');
+        textarea.value = content;
+        adjustTextareaHeight(textarea); // Adjust height after content update
+    }
+
+    // AJAX call function
+    async function submitForm(url, params) {
+        console.log(`Fetching data from ${url} with params:`, params);
+        updateResponseData("fetching data for: " + JSON.stringify(params)); // Display response data
+
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(params)
+            });
+
+            if (!response.ok) {
+                throw new Error(`Error: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            
+            updateResponseData(JSON.stringify(data, null, 2)); // Display response data
+
+        } catch (error) {
+            console.error(error);
+            
+            updateResponseData(`Failed to fetch data: ${error.message}`);
+
+        }
+    }
+
+    function fetchData(route) {
+        const params = {
+            market: document.getElementById('market').value,
+            date: document.getElementById('date').value
+        };
+        submitForm(route, params);
+    }    
+
+</script>
+<form>
+    <h3>Get Market Hours</h3>
+    <table style="width: 100%; margin-bottom: 20px;">
+        <tr>
+            <td style="width: 200px; text-align: right; padding-right: 10px;">
+                <label for="market">Market:</label>
+            </td>
+            <td>
+                <select id="market">
+                    <option value="EQUITY" selected>EQUITY</option>
+                    <option value="OPTION" >OPTION</option>
+                    <option value="BOND" >BOND</option>
+                    <option value="FUTURE" >FUTURE</option>
+                    <option value="FOREX" >FOREX</option>
+                </select>
+            </td>
+        </tr>   
+        <tr>
+            <td style="text-align: right; padding-right: 10px;">
+                <label for="date">Date (ISO-8601):</label>
+            </td>
+            <td>
+                <input type="datetime-local" id="date" placeholder="yyyy-MM-dd'T'HH:mm:ss.SSSZ"> Default is None. Format is (yyyy-MM-dd'T'HH:mm:ss.SSSZ).  Click 'clear' to reset.
+            </td>
+        </tr>
+
+    </table>
+</form> 
+
+<div style="text-align: center;">
+    <button type="button" onclick="fetchData('{{ url_for('search_and_fundamentals.get_market_hours') }}')">Get Market Hours</button>
+</div>
+
+<hr />
+
+<div style="display: flex; flex-direction: column;">
+    <label for="response-data">Response Data:</label>
+    <textarea id="response-data" rows="1" cols="20" readonly></textarea>
+</div>
+
+{% endblock %}

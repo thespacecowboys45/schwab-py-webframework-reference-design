@@ -1,0 +1,126 @@
+{% extends base_template %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block content %}
+    <script src="{{ url_for('static', filename='js/Logger.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/response_data_display.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/streaming_quotes.js') }}"></script>
+ 
+    <br />
+    <!-- Area to display last time stream data waas updated -->
+    <label for="streaming-data-update-time">Latest stream update:</label>
+    <span id="streaming-data-update-time"></span><br />
+    <br/>
+    <h2>Streaming Quotes Table</h2>
+    {% include 'quotes/streaming_quotes_table.html' %}
+
+    <!-- Textarea to display the latest data 
+        deprecate
+    <textarea id="latest-stream-client-data" rows="10" cols="50" readonly></textarea>
+    <hr />
+    -->
+
+    <p>SSE Stream status: '<span id="stream_status">{{ stream_status }}</span>'.</p>
+    <button id="start-streaming-data-button" onclick="startStreamingData()">Start SSE Streaming</button>
+    <button id="stop-streaming-data-button" onclick="stopStreamingData()">Stop SSE Streaming</button><br/>
+    <br />
+
+    <h4>Symbols List Management</h4>
+    <label for="symbols_list_input">Enter a list of symbols:</label>
+    <input type="text" id="symbols_list_input" name="symbols_list_input" size="100" value="AAPL" required>
+    <button onclick="setSymbolsList()">Set Symbols List</button><br />
+    <br />
+    <label for="symbols_list_output">Symbols being WATCHED:</label>
+    <input type="text" id="symbols_list_output" name="symbols_list_output" size="100" value="{{ symbols_list }}" required>
+    <button onclick="getSymbolsList()">Get Symbols List</button>
+    <hr />
+
+    <!-- Input field for the symbol -->
+<!--
+    <p>deprecate this:</p>
+    <label for="symbol">Enter Symbols (separated by comma case insensitive):</label>
+    <input type="text" id="symbol" name="symbol" placeholder="e.g., AAPL, AMD" />
+-->
+
+    <div class="stream-client-refresh-controls">
+        <input type="checkbox" id="task_stream_client_auto_refresh_checkbox" onChange="onChange_taskAutoRefreshCheckbox('stream_client')">Auto refresh
+        <input type="number" id="task_status_stream_client_refresh_frequency" onInput="onInput_taskRefreshFrequency('stream_client');" style="width: 3em;" min="1" value="5">
+        <label for="task_status_stream_client_refresh_frequency">Refresh frequency</label>
+        <span id="task_status_stream_client_countdown" class="task-status-countdown"></span>
+    </div>
+    <div>
+       <p>Task Control:</p>
+        <button  onclick="startTemplateTask('stream_client')">Start Stream Client</button>
+        <button  onclick="stopTemplateTask('stream_client')">Stop Stream Client</button>
+        <button  onclick="statusTemplateTask('stream_client')">Status Stream Client</button><br />        
+    </div>
+    <br />
+    <table border="1">
+        <thead>
+            <th>Running Status</th>
+            <th>Task Status</th>
+            <th>Task Result</th>
+            <th>Last Update Time</th>
+        </thead>
+        <tbody id="stream-client-status-table-body">
+            <tr><td><span id='task_running_status_stream_client'>{{ stream_client_status }}</span></td>
+                <td><span id='task_status_stream_client' placeholder="tbd"></span></td>
+                <td><span id='task_result_stream_client' placeholder="tbd"></span></td>
+                <td><span id='task_last_update_time_stream_client' placeholder="tbd"></span></td></tr>
+        </tbody>
+    </table>
+
+    <hr />
+
+<!--
+    deprecate
+    <h2>Dynamic Table (Updates Rows)</h2>
+    <table id="update-table">
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th>Last Price</th>
+            </tr>
+        </thead>
+        <tbody id="update-table-body">
+        </tbody>
+    </table>
+    <br/>
+-->
+
+
+    <!-- PRE area to display the stream -->
+    <!-- deprecate 
+    <pre id="streaming-data"></pre>
+-->
+    <!-- Textarea to display the stream (comparing output on page) -->
+    <!-- deprecate
+    <textarea id="streaming-data2" rows="10" cols="50" readonly></textarea>
+-->
+
+    
+<!--
+    deprecate
+
+    <h2>Append-Only Table</h2>
+    <table id="append-table">
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th>Last Price</th>
+            </tr>
+        </thead>
+        <tbody id="append-table-body">
+        </tbody>
+    </table>
+-->
+
+   <hr />
+
+    <div style="display: flex; flex-direction: column;">
+        <label for="response-data">Response Data:</label>
+        <textarea id="response-data" rows="1" cols="20" readonly></textarea>
+    </div>
+    
+{% endblock %}

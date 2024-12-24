@@ -1,0 +1,5 @@
+/*
+
+These are generalized functions to handle submitting form data through AJAX
+
+*/
