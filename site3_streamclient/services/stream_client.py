@@ -156,50 +156,6 @@ def schwab_start_stream_client_task(api_key, app_secret, callback_url, token_pat
                 print("Stream client task has exited the loop due to Redis flag.")        
 
 
-### METHOD 1
-
-#        while True:
-#            try:
-#                await stream_client.handle_message()
-#            except asyncio.CancelledError:
-#                print("Stream client task is being cancelled.")
-#                break                
-
-#   asyncio.run(read_stream())   
-
-
-
-        '''
-
-        [2024-11-13 15:45:04,037: ERROR/ForkPoolWorker-1] Task services.schwab.schwab_start_stream_client_task[d3600e1b-f694-49ba-9e6f-869e22e863ab] raised unexpected: RuntimeError("There is no current event loop in thread 'MainThread'.")
-        Traceback (most recent call last):
-          File "/usr/local/lib/python3.13/site-packages/celery/app/trace.py", line 453, in trace_task
-            R = retval = fun(*args, **kwargs)
-                         ~~~^^^^^^^^^^^^^^^^^
-          File "/var/www/html/dev.boardmansGame.com/trading_automation/dev_gunicorn/site10/services/celery_app.py", line 14, in <lambda>
-            celery.Task = type('ContextTask', (celery.Task,), {'__call__': lambda s, *a, **k: s.run(*a, **k)})
-                                                                                              ~~~~~^^^^^^^^^
-          File "/var/www/html/dev.boardmansGame.com/trading_automation/dev_gunicorn/site10/services/schwab.py", line 152, in schwab_start_stream_client_task
-            loop = asyncio.get_event_loop()
-          File "/usr/local/lib/python3.13/asyncio/events.py", line 716, in get_event_loop
-            raise RuntimeError('There is no current event loop in thread %r.'
-                               % threading.current_thread().name)
-        RuntimeError: There is no current event loop in thread 'MainThread'.
-
-        '''
-
-    ### METHOD 2
-
-    # Run the stream task and wait for it to complete or be cancelled
-
-        '''
-    loop = asyncio.get_event_loop()
-    try:
-        loop.run_until_complete(read_stream())
-    except Exception as e:
-        print(f"Exception in schwab_start_stream_client_task: {e}")
-        '''
-
 
 ### METHOD 3 ( use new_event_loop then set_event_loop)
     loop = asyncio.new_event_loop()
