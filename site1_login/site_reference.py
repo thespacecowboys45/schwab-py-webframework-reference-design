@@ -143,46 +143,6 @@ def home():
         except Exception as err:
             print(f"MAIN [ there was an exception while creating client: {err} ]")
 
-    '''
-    ORIGINAL Code inception - single use case whereby this *** only works ***
-             for when a user is navigated to the home route ('/') and clicks "login"
-             IF the user is on any other page and clicks on the login link, then
-             there is a break in the workflow of this implementation design.
-
-    # Check to see if a token file exists.  
-    # If so, assume the user has logged in successfully and provide a logout link
-    # If not, assume the user needs to login and provide a login link
-    if g.token_path:
-        if os.path.exists(g.token_path):
-            # USER IS LOGGED IN
-            g.authorization_url = ""
-
-            print(f"USER IS LOGGED IN")
-        else:
-            # USER IS NOT LOGGED IN
-            print(f"USER IS NOT LOGGED IN")
-            # get an authorization context, which includes a 'state'.  This is part of handling a CSRF token which
-            # maintains a single 'state' for authorizing.  Understanding CSRF tokens is beyond the scope of this application.
-            api_key = g.client_id
-
-            auth_context = auth.get_auth_context(api_key, g.redirect_uri)   
-
-            # store the auth_context_state for future use in the login process
-            # Store in a session instead of g, to persist over subsequent requests
-            session['auth_context_state'] = auth_context.state
-
-            print(f"SET NEW CONTEXT STATE: {auth_context.state}")
-
-            # Should look like:
-            #
-            #  https://api.schwabapi.com/v1/oauth/authorize?response_type=code&client_id=REDACTED&redirect_uri=https%3A%2F%2Fwww.yourdomain.com&state=valueofCSRFtoken
-            #
-            g.authorization_url = auth_context.authorization_url
-            print(f"MAIN [ authorization_url = {g.authorization_url} ]")
-    '''
-
-    
-
     # We use the authorization_url from the auth_context so that it can use the 'state' which is the CSRF token value for the session
     return render_template('home.html', base_template=g.base_template, title="Home", redirect_uri=g.redirect_uri, login_link_url=g.authorization_url)
 

@@ -66,20 +66,33 @@ This codebase may not be maintained or up-to-date with the latest [schwab-py](ht
 
 - OAuth login
 - Quotes
-- Accounts
-- Account Positions
 
 This code uses sessions to store some information, specifically the account which is selected to use in API queires.
 
 #### Site2 INTEGRATIONS
 
-Full list of functions incorporated
+Functions from site 1:
+
+- OAuth login
+- Quotes
+
+Additional functionality in site 2:
+
+- Accounts
+- Account Positions
+- tbd
 
 #### Site3 StreamClient
 
 SchwabStream client implementation (stubbed out).  Require installation of [celery](https://docs.celeryq.dev/en/stable/getting-started/introduction.html) and [redis](https://redis.io/)
 
 # Changelog
+
+##### Version 1.1 (2025)
+- Site 1 refactor and revisions
+- backport some features
+- Begin site 2 publication and refinement
+- YouTube document for Login workflow
 
 ##### Version 1.0 (2024)
 - Site 1 released
