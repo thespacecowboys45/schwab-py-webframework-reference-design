@@ -86,6 +86,14 @@ Additional functionality in site 2:
 
 SchwabStream client implementation (stubbed out).  Require installation of [celery](https://docs.celeryq.dev/en/stable/getting-started/introduction.html) and [redis](https://redis.io/)
 
+## Links:
+
+### The ONE and ONLY: Coin Moulding
+
+https://www.youtube.com/watch?v=Mf09j3lxv4E
+
+<a href="https://www.youtube.com/watch?v=Mf09j3lxv4E" target="_blank" rel="noopener noreferrer">Watch on YouTube</a>
+
 # Changelog
 
 ##### Version 1.1 (2025)
