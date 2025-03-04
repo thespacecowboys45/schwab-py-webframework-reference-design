@@ -5,14 +5,6 @@ Intended reference design for a practical example of using [schwab-py](https://g
 
 ***Disclaimer:*** We claim no responsibility for keeping up-to-date with changes in 'schwab-py' in this reference design.  However, the intent is to demonstrate in simple terms how to "create a working web application" using the 'schwab-py' API abstraction library which is built in Python.
 
-## Donate
-
-[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4XJC3BTYJ8ALG)
-
-If you feel you benefit from this code repo consider a donation.
-
-Button donation will read "Breaking Blackjack" ( a future endeavour ).  Thanks in advance.
-
 ## Requirements
 
 - Python3
@@ -97,6 +89,41 @@ SchwabStream client implementation (stubbed out).  Require installation of [cele
 ### The ONE and ONLY: Coin Moulding (MUSIC)
 
 <a href="https://www.youtube.com/watch?v=Mf09j3lxv4E" target="_blank" rel="noopener noreferrer">Watch on YouTube</a>
+
+
+## Donate
+
+[![Donate](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4XJC3BTYJ8ALG)
+
+If you feel you benefit from this code repo consider a donation.
+
+Button donation will read "Breaking Blackjack" ( a future endeavour ).  Thanks in advance.
+
+
+## About This Project
+
+This project came to us one day in a vision - to produce MUSIC from stock market data.  
+From there, research and design was done, thousands of lines of code written, multiple  
+websites stood up and torn down, databases installed, and python libraries written.  
+
+From here: we are a group of out-of-work software developers doing what we love to do most: CODE.
+
+This project is meant as a learning example of:
+
+- programming in python
+- practical application for automation
+- automations to watch price movement in the stock market
+- opportunities to learn the underlying mechanics of wave patterns in the stock market
+- more ...
+
+If you consider a donation the monies go to support our families and, well, just keeping our  
+head above water.  Many developers do not pay for software they can obtain for free.  What  
+they are really obtaining are TOOLS to accomplish a TASK they want to ACHIEVE.  Consider  
+the value of this codebase to you, and please consider a donation to the cause.
+
+No matter what, we will continue to code.  
+
+YOUR SUPPORT IS APPRECIATED IN ADVANCE!
 
 # Changelog
 
