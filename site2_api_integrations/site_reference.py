@@ -240,7 +240,7 @@ if __name__ == '__main__':
     host = "127.0.0.1"
 
     # bind to all interfaces
-    #host = "0.0.0.0"
+    host = "0.0.0.0"
 
-    port = 5000
+    port = 5001
     app.run(host=host, port=port, debug=True)

@@ -7,6 +7,13 @@
     <style>
         body { font-family: Arial, sans-serif; }
 
+        .eye-icon {
+            cursor: pointer;
+            margin-left: 10px;
+            font-size: 1.2em;
+            user-select: none;
+        }
+
         /* Conditional banner styles */
         .status-banner {
             padding: 10px;
@@ -161,6 +168,30 @@
         
         .content { padding: 20px; }
     </style>
+
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const accountNumber = document.getElementById("account-number");
+        const toggleVisibility = document.getElementById("toggle-account-visibility");
+
+        // Check if default hidden behavior is set
+        if (accountNumber.dataset.hidden === "true") {
+            accountNumber.textContent = "************************";
+            toggleVisibility.textContent = "👁️"; // Open eye by default
+        }
+
+        toggleVisibility.addEventListener("click", function () {
+            if (accountNumber.textContent == "************************") {
+                accountNumber.textContent = "{{ session['accountNumber'] }}";
+                toggleVisibility.textContent = "👁️‍🗨️"; // Slashed eye                
+            } else {
+                accountNumber.textContent = "************************";
+                toggleVisibility.textContent = "👁️"; // Open eye                                                
+            }
+        });
+    });
+    </script>
+        
 </head>
 <body>
     <!-- User Messages banner -->
@@ -181,14 +212,20 @@
 
     <!-- Account selection banner -->
     {% if session.get('accountNumber') %}
-    <div class="current-account-banner account-selected">
-        Selected Account: {{ session['accountNumber'] }}
+    <div id="current-account-banner" class="current-account-banner account-selected">
+        <span>Selected Account: </span>
+        <!-- change data-hidden to 'false' if you want default to show the account number 
+        <span id="account-number" data-hidden="false">{{ session['accountNumber'] }}</span> -->
+        <!-- change data-hidden to 'false' if you want default to show the account number -->
+        <span id="account-number" data-hidden="true">********</span> 
+        <!-- <span id="toggle-account-visibility" class="eye-icon">👁️</span> -->
+        <span id="toggle-account-visibility" class="eye-icon">👁️‍🗨️</span>        
     </div>
     {% else %}
-    <div class="current-account-banner no-account-selected">
+    <div id="current-account-banner" class="current-account-banner no-account-selected">
         No account selected
     </div>
-    {% endif %}     
+    {% endif %}       
 
     <!-- Main navigation -->
     <nav class="main-nav">
