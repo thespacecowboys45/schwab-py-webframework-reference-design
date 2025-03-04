@@ -88,9 +88,13 @@ SchwabStream client implementation (stubbed out).  Require installation of [cele
 
 ## Links:
 
-### The ONE and ONLY: Coin Moulding
+### Sister Channels:
 
-https://www.youtube.com/watch?v=Mf09j3lxv4E
+<a href="https://www.twitch.tv/swizzlesticks2311" target="_blank" rel="noopener noreferrer">Twitch.TV</a>
+<a href="https://www.youtube.com/@stockmarketswizzles" target="_blank" rel="noopener noreferrer">YouTube One</a>
+<a href="https://www.youtube.com/channel/UCy_Y3dj3DIYcSJHEMR9MlSQ" target="_blank" rel="noopener noreferrer">YouTube Two</a>
+
+### The ONE and ONLY: Coin Moulding (MUSIC)
 
 <a href="https://www.youtube.com/watch?v=Mf09j3lxv4E" target="_blank" rel="noopener noreferrer">Watch on YouTube</a>
 
